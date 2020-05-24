@@ -15,3 +15,13 @@ and run it with a `make up`
 
 If you want to debug, just do a `make shell` 
 
+To calibrate the color of your pen use the `make calibrate` command, move the sliders until you only see 
+the 'pen' you are going to be using. 
+
+When you achieve this, type `s` and exit the container 
+
+Just to make sure that the parameters are fine, type `make sure`, this is a cleaner and you should *almost* 
+only see your 'pen'
+
+
+
