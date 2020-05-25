@@ -176,10 +176,10 @@ class VideoCapture:
 
 if __name__ == "__main__":
     capture = VideoCapture()
-    # for _ in range(10_000):
-    #     result = capture.calibrator(draw_rectangle=True)
-    #     if result:
-    #         break
+    for _ in range(10_000):
+        result = capture.calibrator(draw_rectangle=True)
+        if result:
+            break
     c = None
     x, y = 0, 0
     for _ in range(10_000):
