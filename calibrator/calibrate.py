@@ -13,10 +13,6 @@ class VideoCapture:
         self.noise = noise
         self.kernel = np.ones((5, 5), np.uint(8))
 
-    @staticmethod
-    def nothing(*args):
-        pass
-
     def draw_canvas(self, canvas, x1, y1):
         clear = False
         wiper_thresh = 10000
@@ -35,9 +31,10 @@ class VideoCapture:
             co = max(contours, key=cv2.contourArea)
             x2, y2, w, h = cv2.boundingRect(co)
             area = cv2.contourArea(co)
-            print(area)
-            if 1000 < area < 4000 and (x1 != 0 or y1 != 0):
-                canvas = cv2.line(canvas, (x1, y1), (x2, y2), [255, 0, 0], 4)
+
+            k = cv2.waitKey(1) & 0xFF
+            if (x1 != 0 or y1 != 0) and k != ord('s'):
+                canvas = cv2.line(canvas, (x1, y1), (x2, y2), [255, 204, 0], 8)
             x1, y1 = x2, y2
             if area > wiper_thresh:
                 cv2.putText(canvas, 'Clearing Canvas', (100, 200), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 5,
@@ -88,14 +85,10 @@ class VideoCapture:
                                                cv2.CHAIN_APPROX_SIMPLE)
         if contours and cv2.contourArea(max(contours,
                                             key=cv2.contourArea)) > self.noise:
-            c = max(contours, key=cv2.contourArea)
-            x, y, w, h = cv2.boundingRect(c)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 25, 255), 2)
+            co = max(contours, key=cv2.contourArea)
+            x1, y1, w, h = cv2.boundingRect(co)
+            cv2.rectangle(frame, (x1, y1), (x + w, y1 + h), (0, 25, 255), 2)
         cv2.imshow('image', frame)
-        # ESC key
-        # if cv2.waitKey(5) & 0xFF == 27:
-        #     return True
-        # return False
 
     @staticmethod
     def calibrate():
@@ -113,6 +106,10 @@ class VideoCapture:
         u_s = cv2.getTrackbarPos("U - S", "Trackbars")
         u_v = cv2.getTrackbarPos("U - V", "Trackbars")
         return l_h, l_s, l_v, u_h, u_s, u_v
+
+    @staticmethod
+    def nothing(*args):
+        pass
 
     @staticmethod
     def safe_to_pentval(l_h, l_s, l_v, u_h, u_s, u_v):
@@ -135,10 +132,10 @@ class VideoCapture:
 
 if __name__ == "__main__":
     capture = VideoCapture()
-    # for _ in range(10_000):
-    #     result = capture.calibrator(draw_rectangle=True)
-    #     if result:
-    #         break
+    for _ in range(10_000):
+        result = capture.calibrator(draw_rectangle=True)
+        if result:
+            break
     c = None
     x, y = 0, 0
     for _ in range(10_000):
